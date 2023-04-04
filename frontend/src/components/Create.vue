@@ -11,6 +11,7 @@
       <el-form :model="form" label-width="120px">
         <el-form-item label="日期" prop="date">
           <el-date-picker
+              v-if="data === undefined"
               v-model="form.date"
               type="date"
               placeholder="选择日期"
@@ -18,16 +19,26 @@
               format="YYYY-MM-DD"
               value-format="YYYY-MM-DD"
           ></el-date-picker>
+          <el-date-picker
+              v-else
+              v-model="form.date"
+              type="date"
+              placeholder="选择日期"
+              style="width: 100%"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
+              readonly
+          ></el-date-picker>
         </el-form-item>
 
         <el-row :gutter="2">
           <el-col :span="10">
             <el-form-item label="" prop="contesta">
-              <el-input v-model="form.contesta" placeholder="请输入比赛A"></el-input>
+              <el-input v-if="data === undefined" v-model="form.contesta" placeholder="请输入比赛A"></el-input>
+              <el-input v-else v-model="form.contesta" placeholder="请输入比赛A" readonly></el-input>
             </el-form-item>
           </el-col>
-
-
+          
           <el-col :span="10">
             <el-form-item label="" prop="contestb">
               <el-input v-model="form.contestb" placeholder="请输入比赛B"></el-input>
@@ -107,7 +118,7 @@
 </template>
 
 <script setup >
-import {ref, reactive} from "vue";
+import {ref, reactive, watch} from "vue";
 import { SaveData,UpdateData } from "../../wailsjs/go/main/App.js";
 import { ElNotification } from "element-plus";
 
@@ -117,10 +128,19 @@ const emits = defineEmits(['emit-connection-list'])
 let form = ref({typea: "0", typeb: "1/2"})
 if (props.data !== undefined) {
 form.value = props.data
-  // form = props.data
   form.value.typea = "0"
   form.value.typeb = "1/2"
 }
+// console.log("create", form.value)
+// 侦听props.data上的变化
+watch(() => props.data, (newData, oldData) => {
+  // 将新的数据赋值给form
+  form.value = newData
+  form.value.typea = "0"
+  form.value.typeb = "1/2"
+})
+// console.log("create -1 ", form.value)
+
 
 function onSubmit() {
   SaveData({date: form.value.date, contesta: form.value.contesta, contestb: form.value.contestb,

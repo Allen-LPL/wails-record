@@ -228,6 +228,11 @@ const handlePageChange = (val: number) => {
 
 async function getDataList() {
   try {
+    // 判断是否是日期搜索，如果是则调用搜索方法，如果不是则调用获取列表方法
+    if (search.value) {
+      await onSearch()
+      return
+    }
     // 使用await等待GetDataList函数的promise返回结果
     let res = await GetDataList(page.value, size.value);
     if (res.code !== 200) {
