@@ -38,7 +38,7 @@
               <el-input v-else v-model="form.contesta" placeholder="请输入比赛A" readonly></el-input>
             </el-form-item>
           </el-col>
-          
+
           <el-col :span="10">
             <el-form-item label="" prop="contestb">
               <el-input v-model="form.contestb" placeholder="请输入比赛B"></el-input>
